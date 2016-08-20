@@ -19,7 +19,6 @@ import toolbox.Transformation;
 public class TerrainRenderer {
 
 	private TerrainShader shader;
-	private Transformation trans = new Transformation();
 
 	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -73,7 +72,7 @@ public class TerrainRenderer {
 	}
 
 	private void loadModelMatrix(Terrain terrain) {
-		Matrix4f matrix = trans.getWorldMatrix(terrain.getPosition(),new Vector3f(0,0,0), 1);
+		Matrix4f matrix = Transformation.createWorldMatrix(terrain.getPosition(),new Vector3f(0,0,0), 1);
 		shader.loadTransformationMatrix(matrix);
 	}
 

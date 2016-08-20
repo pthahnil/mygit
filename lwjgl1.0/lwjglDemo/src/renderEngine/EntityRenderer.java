@@ -20,7 +20,6 @@ import toolbox.Transformation;
 public class EntityRenderer {
 
 	private StaticShader shader;
-	private Transformation trans = new Transformation();
 
 	public EntityRenderer(StaticShader shader,Matrix4f projectionMatrix) {
 		this.shader = shader;
@@ -69,7 +68,7 @@ public class EntityRenderer {
 	}
 
 	private void prepareInstance(Entity entity) {
-		Matrix4f matrix = trans.getWorldMatrix(entity.getPosition(), new Vector3f(entity.getRotX(),entity.getRotY(),entity.getRotZ()), entity.getScale());
+		Matrix4f matrix = Transformation.createWorldMatrix(entity.getPosition(), new Vector3f(entity.getRotX(),entity.getRotY(),entity.getRotZ()), entity.getScale());
 		shader.loadTransformationMatrix(matrix);
 	}
 

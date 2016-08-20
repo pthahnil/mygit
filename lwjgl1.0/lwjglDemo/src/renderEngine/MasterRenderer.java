@@ -16,6 +16,7 @@ import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
 import terrains.Terrain;
+import toolbox.Transformation;
 
 public class MasterRenderer {
 	
@@ -61,14 +62,14 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadSkyColor(skyColor);
 		shader.loadLight(sun);
-		shader.loadViewMatrix(camera.getViewMatrix());
+		shader.loadViewMatrix(Transformation.createViewMatrix(camera));
 		renderer.render(entities);
 		shader.stop();
 		
 		terrainShader.start();
 		terrainShader.loadSkyColor(skyColor);
 		terrainShader.loadLight(sun);
-		terrainShader.loadViewMatrix(camera.getViewMatrix());
+		terrainShader.loadViewMatrix(Transformation.createViewMatrix(camera));
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
 		

@@ -98,7 +98,6 @@ public class GameTest {
 		entities.add(player);
 		//***********************************************//
 		
-		
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 		
 		Camera camera = new Camera();
