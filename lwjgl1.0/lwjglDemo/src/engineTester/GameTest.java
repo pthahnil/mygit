@@ -89,18 +89,17 @@ public class GameTest {
 		//***********************************************//
 		TexturedModel bunny = null;
 		try {
-			bunny = new TexturedModel(objLoader.loadFile("/res/bunny.obj"), new Texture("/res/tree.png"));
+			bunny = new TexturedModel(objLoader.loadFile("/res/person.obj"), new Texture("/res/playerTexture.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Player player = new Player(bunny, new Vector3f(0,0,-10), 0, 0, 0, 0.4f);
-		player.setWindow(window); 
+		Player player = new Player(bunny, new Vector3f(0,0,-10), 0, 1, 0, 0.4f);
 		entities.add(player);
 		//***********************************************//
 		
 		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 		
-		Camera camera = new Camera();
+		Camera camera = new Camera(player,window);
 		
 		while(!window.windowShouldClose()){
 			
@@ -115,7 +114,7 @@ public class GameTest {
 			for (Entity entity2 : entities) {
 				msrender.processEntity(entity2);
 			}
-			player.move();
+			camera.move();
 			
 			msrender.render(light, camera);
 			window.update();

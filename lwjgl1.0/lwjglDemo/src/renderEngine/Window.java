@@ -46,21 +46,16 @@ import toolbox.Timer;
 public class Window {
 
     private final String title;
-
     private int width;
-
     private int height;
 
     private long windowHandle;
 
     private GLFWErrorCallback errorCallback;
-
     private GLFWKeyCallback keyCallback;
-
     private GLFWWindowSizeCallback windowSizeCallback;
-
+    
     private boolean resized;
-
     private boolean vSync;
     
     private Timer timer = new Timer();

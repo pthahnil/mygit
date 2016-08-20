@@ -21,8 +21,8 @@ public class Transformation {
 		Matrix4f matrix = new Matrix4f();
 		matrix.identity();
 		// First do the rotation so camera rotates over its position
-		matrix.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1, 0, 0))
-				.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0, 1, 0));
+		matrix.rotate((float) Math.toRadians(camera.getRotation().x), new Vector3f(1, 0, 0))
+				.rotate((float) Math.toRadians(camera.getRotation().y), new Vector3f(0, 1, 0));
 		// Then do the translation
 		matrix.translate(-(camera.getPosition().x), -(camera.getPosition().y), -(camera.getPosition().z));
 		return matrix;
