@@ -34,14 +34,15 @@ public class Camera {
 	}
 	
 	public void calculateCameraPosition(){
+		this.rotation = new Vector3f(rotation.x,(180 - (player.getRotY())),rotation.z);
 		
 		float yOff = (float) (distance2Player * Math.sin(Math.toRadians(this.rotation.x)));
 		float vDistance = (float) (distance2Player * Math.cos(Math.toRadians(this.rotation.x)));
 		float xOff = (float) (vDistance * Math.sin(Math.toRadians(player.getRotY()))) ;
 		float zOff = (float) (vDistance * Math.cos(Math.toRadians(player.getRotY()))) ;
 		
-		this.position = new Vector3f(player.getPosition().x+xOff,player.getPosition().y+yOff,player.getPosition().z+zOff);
-		this.rotation = new Vector3f(rotation.x,-player.getRotY(),-player.getRotZ());
+		this.position = new Vector3f(player.getPosition().x-xOff,player.getPosition().y+yOff,player.getPosition().z-zOff);
+		
 	}
 
 	public Vector3f getPosition() {

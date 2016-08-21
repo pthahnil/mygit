@@ -4,6 +4,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 import org.joml.Vector3f;
@@ -57,9 +58,17 @@ public class Player extends Entity {
 
 	private void checkInputs() {
 		if (window.isKeyPressed(GLFW_KEY_W)) {
-			this.currentSpeed = RUN_SPEED;
+			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
+				this.currentSpeed = RUN_SPEED*1.3f;
+			}else{
+				this.currentSpeed = RUN_SPEED;
+			}
 		} else if (window.isKeyPressed(GLFW_KEY_S)) {
-			this.currentSpeed = -RUN_SPEED;
+			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
+				this.currentSpeed = -RUN_SPEED*1.3f;
+			}else{
+				this.currentSpeed = -RUN_SPEED;
+			}
 		} else {
 			this.currentSpeed = 0;
 		}

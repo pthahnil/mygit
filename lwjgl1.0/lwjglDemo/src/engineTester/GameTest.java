@@ -12,14 +12,14 @@ import entities.Entity;
 import entities.Light;
 import entities.Player;
 import models.TexturedModel;
-import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import renderEngine.Window;
 import terrains.Terrain;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
 import textures.Texture;
+import toolbox.Loader;
+import toolbox.OBJLoader;
 
 public class GameTest {
 
@@ -78,7 +78,7 @@ public class GameTest {
 			}
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					terrain = new Terrain(new Vector3f(i, 0,j), loader, pack, blendMap);
+					terrain = new Terrain(new Vector3f(i, 0,j), loader, pack, blendMap,"/res/heightmap.png");
 					terrains.add(terrain);
 				}
 			}
@@ -93,7 +93,7 @@ public class GameTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Player player = new Player(bunny, new Vector3f(0,0,-10), 0, 1, 0, 0.4f);
+		Player player = new Player(bunny, new Vector3f(0,0,0), 0, 0, 0, 0.4f);
 		entities.add(player);
 		//***********************************************//
 		
