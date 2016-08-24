@@ -17,6 +17,9 @@ uniform vec3 lightPosition;
 
 uniform float useFackLightLing;
 
+uniform float rows;
+uniform vec2 offset;
+
 const float density = 0.001;
 const float gradient = 1.5;
 
@@ -25,7 +28,7 @@ void main(void){
 	vec4 worldPosition = transformationMatrix * vec4(position,1.0);
 	vec4 positionToCamera = viewMatrix * worldPosition;
 	gl_Position = projectionMatrix * positionToCamera;
-	pass_textureCoordinates = textureCoordinates;
+	pass_textureCoordinates = (textureCoordinates/rows) + offset;
 	
 	vec3 actualNormal = normal;
 	if(useFackLightLing > 0.5){

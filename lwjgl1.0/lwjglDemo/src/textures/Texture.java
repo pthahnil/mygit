@@ -2,6 +2,8 @@ package textures;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
@@ -15,8 +17,10 @@ public class Texture {
 
 	private boolean isTransParent = false;
 	private boolean useFackLightLing = false;
+	
+	private int rows = 1;
 
-	public Texture(String fileName) throws Exception {
+	public Texture(String fileName) {
 		this(loadTexture(fileName));
 	}
 
@@ -27,7 +31,7 @@ public class Texture {
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
-
+	
 	public boolean isTransParent() {
 		return isTransParent;
 	}
@@ -48,13 +52,22 @@ public class Texture {
 		return id;
 	}
 
-	private static int loadTexture(String fileName) throws Exception {
+	private static int loadTexture(String fileName) {
 		// Load Texture file
-		PNGDecoder decoder = new PNGDecoder(Texture.class.getResourceAsStream(fileName));
+		PNGDecoder decoder = null;
+		try {
+			decoder = new PNGDecoder(Texture.class.getResourceAsStream(fileName));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		// Load texture contents into a byte buffer
 		ByteBuffer buf = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
-		decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
+		try {
+			decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		buf.flip();
 
 		// Create a new OpenGL texture
@@ -97,4 +110,12 @@ public class Texture {
 		this.reflectivity = reflectivity;
 	}
 
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+	
 }

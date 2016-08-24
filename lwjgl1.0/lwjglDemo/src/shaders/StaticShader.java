@@ -1,6 +1,7 @@
 package shaders;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import entities.Light;
@@ -19,6 +20,8 @@ public class StaticShader extends ShaderProgram {
 	public static final String REFLECTIVITY = "reflectivity";
 	public static final String FACKLIGHTLING = "useFackLightLing";
 	public static final String SKYCOLOUR = "skyColour";
+	public static final String ROWS = "rows";
+	public static final String OFFSET = "offset";
 	
 	public StaticShader() {
 		super(VTFILE, FGFILE);
@@ -43,9 +46,19 @@ public class StaticShader extends ShaderProgram {
 			super.createUniform(REFLECTIVITY);
 			super.createUniform(FACKLIGHTLING);
 			super.createUniform(SKYCOLOUR);
+			super.createUniform(ROWS);
+			super.createUniform(OFFSET);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void loadRows(int rows){
+		super.loadFloat(ROWS, rows);
+	}
+	
+	public void loadOffset(float x,float y){
+		super.loadVector2f(OFFSET, new Vector2f(x,y));
 	}
 	
 	public void loadSkyColor(Vector3f skyColor){

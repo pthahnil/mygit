@@ -11,6 +11,7 @@ import org.joml.Vector3f;
 
 import models.TexturedModel;
 import renderEngine.Window;
+import terrains.Terrain;
 
 public class Player extends Entity {
 
@@ -32,7 +33,7 @@ public class Player extends Entity {
 		super(model, position, rotX, rotY, rotZ, scale);
 	}
 
-	public void move() {
+	public void move(Terrain terrain) {
 		checkInputs();
 		super.increaseRotation(0, currentTurnSpeed*window.getDelta(), 0);
 		float distance = currentSpeed * window.getDelta();
@@ -42,10 +43,12 @@ public class Player extends Entity {
 		
 		upspeed += GRAVITY*window.getDelta();
 		super.increasePosition(0, upspeed*window.getDelta(), 0);
-		if(super.getPosition().y <= TERRAINHEIGHT){
+		
+		float terrainHeight = terrain.getTerrainHeight(this.getPosition().x, this.getPosition().z);
+		if(super.getPosition().y <= terrainHeight){
 			this.upspeed = 0;
 			inTheAir = false;
-			super.getPosition().y = TERRAINHEIGHT;
+			super.getPosition().y = terrainHeight;
 		}
 	}
 	
@@ -59,13 +62,13 @@ public class Player extends Entity {
 	private void checkInputs() {
 		if (window.isKeyPressed(GLFW_KEY_W)) {
 			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-				this.currentSpeed = RUN_SPEED*1.3f;
+				this.currentSpeed = RUN_SPEED*2f;
 			}else{
 				this.currentSpeed = RUN_SPEED;
 			}
 		} else if (window.isKeyPressed(GLFW_KEY_S)) {
 			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-				this.currentSpeed = -RUN_SPEED*1.3f;
+				this.currentSpeed = -RUN_SPEED*2f;
 			}else{
 				this.currentSpeed = -RUN_SPEED;
 			}

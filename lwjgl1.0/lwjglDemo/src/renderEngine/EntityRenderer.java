@@ -52,6 +52,7 @@ public class EntityRenderer {
 		if(texture.isTransParent()){
 			MasterRenderer.disAbleCulling();
 		}
+		shader.loadRows(texture.getRows());
 		shader.loadFackLightLing(texture.isUseFackLightLing());
 		
 		shader.loadShineAttrs(texture.getShineDumper(), texture.getReflectivity());
@@ -70,6 +71,7 @@ public class EntityRenderer {
 	private void prepareInstance(Entity entity) {
 		Matrix4f matrix = Transformation.createWorldMatrix(entity.getPosition(), new Vector3f(entity.getRotX(),entity.getRotY(),entity.getRotZ()), entity.getScale());
 		shader.loadTransformationMatrix(matrix);
+		shader.loadOffset(entity.getTexXoffSet(), entity.getTexYoffSet());
 	}
 
 }

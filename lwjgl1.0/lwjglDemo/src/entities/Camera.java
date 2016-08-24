@@ -29,7 +29,7 @@ public class Camera {
 	}
 
 	public void move() {
-		player.move();
+//		player.move();
 		calculateCameraPosition();
 	}
 	

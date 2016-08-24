@@ -41,51 +41,39 @@ public class GameTest {
 		
 		OBJLoader objLoader = new OBJLoader();
 		
-		TexturedModel txmodel = null;
-		TexturedModel txmodel2 = null;
-		TexturedModel txmodel3 = null;
-		TexturedModel txmodel4 = null;
-		Entity entity = null;
-		
 		List<Entity> entities = new ArrayList<>();
+		
 		Random rand = new Random();
 		
-		List<Terrain> terrains = new ArrayList<>();
-		Terrain terrain = null;
-		try {
+		TexturedModel txmodel = new TexturedModel(objLoader.loadFile("/res/tree.obj"), new Texture("/res/tree.png"));
+		TexturedModel txmodel2 = new TexturedModel(objLoader.loadFile("/res/fern.obj"), new Texture("/res/fern.png"));
+		TexturedModel txmodel3 = new TexturedModel(objLoader.loadFile("/res/grassModel.obj"), new Texture("/res/grassTexture.png"));
+		TexturedModel txmodel4 = new TexturedModel(objLoader.loadFile("/res/lowPolyTree.obj"), new Texture("/res/lowPolyTree.png"));
+		for (int i = 0; i < 100; i++) {
 			
-			txmodel = new TexturedModel(objLoader.loadFile("/res/tree.obj"), new Texture("/res/tree.png"));
-			txmodel2 = new TexturedModel(objLoader.loadFile("/res/fern.obj"), new Texture("/res/fern.png"));
-			txmodel3 = new TexturedModel(objLoader.loadFile("/res/grassModel.obj"), new Texture("/res/grassTexture.png"));
-			txmodel4 = new TexturedModel(objLoader.loadFile("/res/lowPolyTree.obj"), new Texture("/res/lowPolyTree.png"));
-			for (int i = 0; i < 100; i++) {
-				entity = new Entity(txmodel, new Vector3f(rand.nextFloat()*1000-600,0,rand.nextFloat()*1000-600), 0,0,0, 4);
-				entities.add(entity);
-				
-				entity = new Entity(txmodel2, new Vector3f(rand.nextFloat()*1000-300,0,rand.nextFloat()*1000-400), 0,0,0, 1);
-				entity.getModel().getTexture().setTransParent(true);
-				entities.add(entity);
-				
-				entity = new Entity(txmodel3, new Vector3f(rand.nextFloat()*1000-400,0,rand.nextFloat()*1000-500), 0,0,0, 1);
-				entity.getModel().getTexture().setTransParent(true);
-				entity.getModel().getTexture().setUseFackLightLing(true);
-				entities.add(entity);
-				
-				entity = new Entity(txmodel4, new Vector3f(rand.nextFloat()*1000-300,0,rand.nextFloat()*1000-400), 0,0,0, 1);
-				entity.getModel().getTexture().setTransParent(true);
-				entities.add(entity);
-				
-			}
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					terrain = new Terrain(new Vector3f(i, 0,j), loader, pack, blendMap,"/res/heightmap.png");
-					terrains.add(terrain);
-				}
-			}
+			Entity entity = new Entity(txmodel, new Vector3f(rand.nextFloat()*1000-600,0,rand.nextFloat()*1000-600), 0,0,0, 4);
+			entities.add(entity);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+			Entity entity2 = new Entity(rand.nextInt(4),txmodel2, new Vector3f(rand.nextFloat()*1000-300,0,rand.nextFloat()*1000-400), 0,0,0, 1);
+			entity2.getModel().getTexture().setTransParent(true);
+			entity2.getModel().getTexture().setRows(2);
+			entities.add(entity2);
+			
+			Entity entity3 = new Entity(txmodel3, new Vector3f(rand.nextFloat()*1000-400,0,rand.nextFloat()*1000-500), 0,0,0, 1);
+			entity3.getModel().getTexture().setTransParent(true);
+			entity3.getModel().getTexture().setUseFackLightLing(true);
+			entities.add(entity3);
+			
+			Entity entity4 = new Entity(txmodel4, new Vector3f(rand.nextFloat()*1000-300,0,rand.nextFloat()*1000-400), 0,0,0, 1);
+			entity4.getModel().getTexture().setTransParent(true);
+			entities.add(entity4);
+			
 		}
+			
+		
+		List<Terrain> terrains = new ArrayList<>();
+		Terrain terrain = new Terrain(new Vector3f(0, 0,0), loader, pack, blendMap,"/res/heightmap.png");
+		terrains.add(terrain);
 		//***********************************************//
 		TexturedModel bunny = null;
 		try {
@@ -115,6 +103,7 @@ public class GameTest {
 				msrender.processEntity(entity2);
 			}
 			camera.move();
+			player.move(terrain);
 			
 			msrender.render(light, camera);
 			window.update();

@@ -10,9 +10,22 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
-
+	
+	private int texIndex = 0;
+	
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
+		this.model = model;
+		this.position = position;
+		this.rotX = rotX;
+		this.rotY = rotY;
+		this.rotZ = rotZ;
+		this.scale = scale;
+	}
+	
+	public Entity(int texIndex, TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
+			float scale) {
+		this.texIndex = texIndex;
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
@@ -36,7 +49,22 @@ public class Entity {
 	public TexturedModel getModel() {
 		return model;
 	}
+	
 
+	public float getTexXoffSet(){
+		int tt = model.getTexture().getRows();
+		int col =  texIndex%tt;
+		float xoffset = col/(float)model.getTexture().getRows();
+		return xoffset;
+	}
+	
+	public float getTexYoffSet(){
+		int tt = model.getTexture().getRows();
+		int row =  texIndex/tt;
+		float yoffset = row/(float)model.getTexture().getRows();
+		return yoffset;
+	}
+	
 	public void setModel(TexturedModel model) {
 		this.model = model;
 	}

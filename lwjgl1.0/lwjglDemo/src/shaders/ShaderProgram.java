@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -128,6 +129,11 @@ public abstract class ShaderProgram {
     	GL20.glUniform3f(location, vect.x, vect.y, vect.z);
     }
     
+    protected void loadVector2f(String loname, Vector2f offset){
+    	Integer location = uniforms.get(loname);
+    	GL20.glUniform2f(location, offset.x, offset.y);
+    }
+    
     protected void loadBoolean(int location,boolean b){
     	float f = 0;
     	if(b){
@@ -151,4 +157,5 @@ public abstract class ShaderProgram {
     	Integer location = uniforms.get(loname);
     	GL20.glUniformMatrix4fv(location, false, matrixBuffer);
     }
+    
 }
