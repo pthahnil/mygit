@@ -1,5 +1,7 @@
 package shaders;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -41,8 +43,12 @@ public class TerrainShader extends ShaderProgram {
 			super.createUniform(TRANSFORMATION);
 			super.createUniform(PROJECTION);
 			super.createUniform(VIEW);
-			super.createUniform(LTPOSITION);
-			super.createUniform(LTCOLOR);
+			
+			for (int i = 0; i < 2; i++) {
+				super.createUniform(LTPOSITION+"["+i+"]");
+				super.createUniform(LTCOLOR+"["+i+"]");
+			}
+			
 			super.createUniform(SHINEDUMPER);
 			super.createUniform(REFLECTIVITY);
 			super.createUniform(SKYCOLOUR);
@@ -80,9 +86,16 @@ public class TerrainShader extends ShaderProgram {
 		super.setUniform(PROJECTION, matrix);
 	}
 
-	public void loadLight(Light light) {
-		super.loadVector(LTPOSITION, light.getPosition());
-		super.loadVector(LTCOLOR, light.getColour());
+	public void loadLights(List<Light> lights){
+		for (int i = 0; i < 2; i++) {
+			if(i<lights.size()){
+				super.loadVector(LTPOSITION+"["+i+"]", lights.get(i).getPosition());
+				super.loadVector(LTCOLOR+"["+i+"]", lights.get(i).getColour());
+			}else{
+				super.loadVector(LTPOSITION+"["+i+"]", new Vector3f(0,0,0));
+				super.loadVector(LTCOLOR+"["+i+"]",  new Vector3f(0,0,0));
+			}
+		}
 	}
 
 	public void loadShineAttrs(float shineDumper, float reflectivity) {

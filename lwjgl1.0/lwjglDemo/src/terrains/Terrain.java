@@ -16,7 +16,7 @@ import toolbox.Loader;
 public class Terrain {
 
 	private static final float SIZE = 800;
-	private float MAX_HEIGHT = 0;
+	private float MAX_HEIGHT = 10;
 	private float MAX_PIXEL_COLOR = 256 * 256 * 256;
 
 	private RawModel model;

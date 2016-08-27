@@ -39,7 +39,6 @@ void main(void){
 		
 		totalDiffuse += diffuse;
 		totalSpecular += finalSpecular;
-		
 	}
 	
 	totalDiffuse = max(totalDiffuse,0.2);

@@ -13,7 +13,6 @@ import models.RawModel;
 import shaders.TerrainShader;
 import terrains.Terrain;
 import textures.TerrainTexturePack;
-import textures.Texture;
 import toolbox.Transformation;
 
 public class TerrainRenderer {
