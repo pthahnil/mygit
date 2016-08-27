@@ -1,5 +1,7 @@
 package shaders;
 
+import java.util.List;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -14,8 +16,12 @@ public class StaticShader extends ShaderProgram {
 	public static final String TRANSFORMATION = "transformationMatrix";
 	public static final String PROJECTION = "projectionMatrix";
 	public static final String VIEW = "viewMatrix";
+	
 	public static final String LTPOSITION = "lightPosition[0]";
 	public static final String LTCOLOR = "lightColour[0]";
+	public static final String LTPOSITION2 = "lightPosition[1]";
+	public static final String LTCOLOR2 = "lightColour[1]";
+	
 	public static final String SHINEDUMPER = "shineDamper";
 	public static final String REFLECTIVITY = "reflectivity";
 	public static final String FACKLIGHTLING = "useFackLightLing";
@@ -42,6 +48,8 @@ public class StaticShader extends ShaderProgram {
 			super.createUniform(VIEW);
 			super.createUniform(LTPOSITION);
 			super.createUniform(LTCOLOR);
+			super.createUniform(LTPOSITION2);
+			super.createUniform(LTCOLOR2);
 			super.createUniform(SHINEDUMPER);
 			super.createUniform(REFLECTIVITY);
 			super.createUniform(FACKLIGHTLING);
@@ -77,9 +85,11 @@ public class StaticShader extends ShaderProgram {
 		super.setUniform(PROJECTION, matrix);
 	}
 	
-	public void loadLight(Light light){
-		super.loadVector(LTPOSITION, light.getPosition());
-		super.loadVector(LTCOLOR, light.getColour());
+	public void loadLights(List<Light> lights){
+		super.loadVector(LTPOSITION, lights.get(0).getPosition());
+		super.loadVector(LTCOLOR, lights.get(0).getColour());
+		super.loadVector(LTPOSITION2, lights.get(1).getPosition());
+		super.loadVector(LTCOLOR2, lights.get(1).getColour());
 	}
 	
 	public void loadShineAttrs(float shineDumper,float reflectivity){

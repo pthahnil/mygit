@@ -105,7 +105,7 @@ public class GameTest {
 			camera.move();
 			player.move(terrain);
 			
-			msrender.render(lights.get(0), camera);
+			msrender.render(lights, camera);
 			window.update();
 		}
 		msrender.cleanUp();
