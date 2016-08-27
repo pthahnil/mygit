@@ -67,9 +67,7 @@ public class GameTest {
 			Entity entity4 = new Entity(txmodel4, new Vector3f(rand.nextFloat()*1000-300,0,rand.nextFloat()*1000-400), 0,0,0, 1);
 			entity4.getModel().getTexture().setTransParent(true);
 			entities.add(entity4);
-			
 		}
-			
 		
 		List<Terrain> terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(0, 0,0), loader, pack, blendMap,"/res/heightmap.png");
@@ -84,11 +82,13 @@ public class GameTest {
 		Player player = new Player(bunny, new Vector3f(0,0,0), 0, 0, 0, 0.4f);
 		entities.add(player);
 		//***********************************************//
-		
-		Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
+		List<Light>lights = new ArrayList<>();
+		lights.add(new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1)));
+		lights.add(new Light(new Vector3f(200,30,200),new Vector3f(10,0,0)));
+		lights.add(new Light(new Vector3f(-200,30,-200),new Vector3f(0,0,10)));
 		
 		Camera camera = new Camera(player,window);
-		
+		//***********************************************//
 		while(!window.windowShouldClose()){
 			
 			if ( window.isResized() ) {
@@ -105,7 +105,7 @@ public class GameTest {
 			camera.move();
 			player.move(terrain);
 			
-			msrender.render(light, camera);
+			msrender.render(lights.get(0), camera);
 			window.update();
 		}
 		msrender.cleanUp();

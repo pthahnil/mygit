@@ -14,8 +14,8 @@ public class StaticShader extends ShaderProgram {
 	public static final String TRANSFORMATION = "transformationMatrix";
 	public static final String PROJECTION = "projectionMatrix";
 	public static final String VIEW = "viewMatrix";
-	public static final String LTPOSITION = "lightPosition";
-	public static final String LTCOLOR = "lightColour";
+	public static final String LTPOSITION = "lightPosition[0]";
+	public static final String LTCOLOR = "lightColour[0]";
 	public static final String SHINEDUMPER = "shineDamper";
 	public static final String REFLECTIVITY = "reflectivity";
 	public static final String FACKLIGHTLING = "useFackLightLing";
