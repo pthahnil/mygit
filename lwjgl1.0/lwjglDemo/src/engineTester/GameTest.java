@@ -79,14 +79,18 @@ public class GameTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Player player = new Player(bunny, new Vector3f(0,0,0), 0, 0, 0, 0.4f);
+		Player player = new Player(bunny, new Vector3f(0.5f,0,0.5f), 0, 0, 0, 0.4f);
 		entities.add(player);
 		//***********************************************//
 		List<Light>lights = new ArrayList<>();
-		lights.add(new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1)));
-		lights.add(new Light(new Vector3f(200,30,200),new Vector3f(10,0,0)));
-		lights.add(new Light(new Vector3f(-200,30,-200),new Vector3f(0,0,10)));
+		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(0.4f,0.4f,0.4f)));
+		lights.add(new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0),new Vector3f(1.0f,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(370,17,-300),new Vector3f(0,2,2),new Vector3f(1.0f,0.01f,0.002f)));
+		lights.add(new Light(new Vector3f(293,7,-305),new Vector3f(2,2,0),new Vector3f(1.0f,0.01f,0.002f)));
 		
+		
+		
+		//***********************************************//
 		Camera camera = new Camera(player,window);
 		//***********************************************//
 		while(!window.windowShouldClose()){

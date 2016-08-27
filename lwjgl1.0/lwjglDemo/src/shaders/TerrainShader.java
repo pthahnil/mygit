@@ -25,6 +25,7 @@ public class TerrainShader extends ShaderProgram {
 	public static final String GSAMPLE = "gTexture";
 	public static final String BSAMPLE = "bTexture";
 	public static final String BLENDMAPSAMPLE = "blendMap";
+	public static final String ATTENUATION = "attenuation";
 
 	public TerrainShader() {
 		super(VTFILE, FGFILE);
@@ -44,9 +45,10 @@ public class TerrainShader extends ShaderProgram {
 			super.createUniform(PROJECTION);
 			super.createUniform(VIEW);
 			
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 4; i++) {
 				super.createUniform(LTPOSITION+"["+i+"]");
 				super.createUniform(LTCOLOR+"["+i+"]");
+				super.createUniform(ATTENUATION+"["+i+"]");
 			}
 			
 			super.createUniform(SHINEDUMPER);
@@ -87,13 +89,15 @@ public class TerrainShader extends ShaderProgram {
 	}
 
 	public void loadLights(List<Light> lights){
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 4; i++) {
 			if(i<lights.size()){
 				super.loadVector(LTPOSITION+"["+i+"]", lights.get(i).getPosition());
 				super.loadVector(LTCOLOR+"["+i+"]", lights.get(i).getColour());
+				super.loadVector(ATTENUATION+"["+i+"]", lights.get(i).getAttenuation());
 			}else{
 				super.loadVector(LTPOSITION+"["+i+"]", new Vector3f(0,0,0));
 				super.loadVector(LTCOLOR+"["+i+"]",  new Vector3f(0,0,0));
+				super.loadVector(ATTENUATION+"["+i+"]",  new Vector3f(1,0,0));
 			}
 		}
 	}
