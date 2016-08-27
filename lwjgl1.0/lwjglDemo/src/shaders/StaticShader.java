@@ -17,10 +17,8 @@ public class StaticShader extends ShaderProgram {
 	public static final String PROJECTION = "projectionMatrix";
 	public static final String VIEW = "viewMatrix";
 	
-	public static final String LTPOSITION = "lightPosition[0]";
-	public static final String LTCOLOR = "lightColour[0]";
-	public static final String LTPOSITION2 = "lightPosition[1]";
-	public static final String LTCOLOR2 = "lightColour[1]";
+	public static final String LTPOSITION = "lightPosition";
+	public static final String LTCOLOR = "lightColour";
 	
 	public static final String SHINEDUMPER = "shineDamper";
 	public static final String REFLECTIVITY = "reflectivity";
@@ -46,10 +44,12 @@ public class StaticShader extends ShaderProgram {
 			super.createUniform(TRANSFORMATION);
 			super.createUniform(PROJECTION);
 			super.createUniform(VIEW);
-			super.createUniform(LTPOSITION);
-			super.createUniform(LTCOLOR);
-			super.createUniform(LTPOSITION2);
-			super.createUniform(LTCOLOR2);
+			
+			for (int i = 0; i < 2; i++) {
+				super.createUniform(LTPOSITION+"["+i+"]");
+				super.createUniform(LTCOLOR+"["+i+"]");
+			}
+			
 			super.createUniform(SHINEDUMPER);
 			super.createUniform(REFLECTIVITY);
 			super.createUniform(FACKLIGHTLING);
@@ -86,10 +86,15 @@ public class StaticShader extends ShaderProgram {
 	}
 	
 	public void loadLights(List<Light> lights){
-		super.loadVector(LTPOSITION, lights.get(0).getPosition());
-		super.loadVector(LTCOLOR, lights.get(0).getColour());
-		super.loadVector(LTPOSITION2, lights.get(1).getPosition());
-		super.loadVector(LTCOLOR2, lights.get(1).getColour());
+		for (int i = 0; i < 2; i++) {
+			if(i<lights.size()){
+				super.loadVector(LTPOSITION+"["+i+"]", lights.get(i).getPosition());
+				super.loadVector(LTCOLOR+"["+i+"]", lights.get(i).getColour());
+			}else{
+				super.loadVector(LTPOSITION+"["+i+"]", new Vector3f(0,0,0));
+				super.loadVector(LTCOLOR+"["+i+"]",  new Vector3f(0,0,0));
+			}
+		}
 	}
 	
 	public void loadShineAttrs(float shineDumper,float reflectivity){
