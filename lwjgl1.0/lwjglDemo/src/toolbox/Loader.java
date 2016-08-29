@@ -173,23 +173,25 @@ public class Loader {
 	}
 
 	private TextureData decodeTextureData(String file) {
-		int width = 0;
-		int height = 0;
 		ByteBuffer buf = null;
 
 		PNGDecoder decoder = null;
 		try {
 			decoder = new PNGDecoder(Loader.class.getResourceAsStream(file));
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			buf = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(buf, width * 4, Format.RGB);
-			buf.flip();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		return new TextureData(width, height, buf);
+		// Load texture contents into a byte buffer
+		buf = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
+		try {
+			decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		buf.flip();
+
+		return new TextureData(decoder.getWidth(), decoder.getHeight(), buf);
 	}
 
 	public void unbindVAO() {

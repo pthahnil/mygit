@@ -37,7 +37,7 @@ public class GameTest {
 		TerrainTexturePack pack = new TerrainTexturePack(bgTexture, rTexture, gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture("/res/blendMap.png");
 		//***********************************************//
-		MasterRenderer msrender = new MasterRenderer(window);
+		MasterRenderer msrender = new MasterRenderer(window,loader);
 		
 		OBJLoader objLoader = new OBJLoader();
 		
