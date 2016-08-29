@@ -72,15 +72,24 @@ public class GameTest {
 		List<Terrain> terrains = new ArrayList<>();
 		Terrain terrain = new Terrain(new Vector3f(0, 0,0), loader, pack, blendMap,"/res/heightmap.png");
 		terrains.add(terrain);
+		terrains.add(new Terrain(new Vector3f(1, 0,0), loader, pack, blendMap,"/res/heightmap.png"));
 		//***********************************************//
-		TexturedModel bunny = null;
+		TexturedModel person = null;
 		try {
-			bunny = new TexturedModel(objLoader.loadFile("/res/person.obj"), new Texture("/res/playerTexture.png"));
+			person = new TexturedModel(objLoader.loadFile("/res/person.obj"), new Texture("/res/playerTexture.png"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Player player = new Player(bunny, new Vector3f(0.5f,0,0.5f), 0, 0, 0, 0.4f);
+		Player player = new Player(person, new Vector3f(300,0,-380f), 0, 0, 0, 0.5f);
+		
 		entities.add(player);
+		//***********************************************//
+		TexturedModel lamp = new TexturedModel(objLoader.loadFile("/res/lamp.obj"), new Texture("/res/lamp.png"));
+		
+		entities.add(new Entity(lamp, new Vector3f(185,0f,-293), 0, 0, 0, 1)) ;
+		entities.add(new Entity(lamp, new Vector3f(370,0f,-300), 0, 0, 0, 1)) ;
+		entities.add(new Entity(lamp, new Vector3f(293,0f,-305), 0, 0, 0, 1)) ;
+		
 		//***********************************************//
 		List<Light>lights = new ArrayList<>();
 		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(0.4f,0.4f,0.4f)));
