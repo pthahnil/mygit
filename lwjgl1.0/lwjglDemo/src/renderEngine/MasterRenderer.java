@@ -79,7 +79,7 @@ public class MasterRenderer {
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
 		
-		skyRender.render(camera);
+		skyRender.render(camera,skyColor);
 		
 		terrains.clear();
 		entities.clear();

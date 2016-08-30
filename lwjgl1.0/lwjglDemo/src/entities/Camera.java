@@ -17,14 +17,14 @@ public class Camera {
 
 	private Player player;
 	private Window window;
-	private MouseInput mouse;
+//	private MouseInput mouse;
 
 	public Camera(Player player, Window window) {
 		this.player = player;
 		this.window = window;
 		player.setWindow(window);
-		mouse = new MouseInput();
-		mouse.init(window);
+//		mouse = new MouseInput();
+//		mouse.init(window);
 		calculateCameraPosition();
 	}
 

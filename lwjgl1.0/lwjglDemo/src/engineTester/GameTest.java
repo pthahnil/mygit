@@ -13,6 +13,7 @@ import entities.Light;
 import entities.Player;
 import models.TexturedModel;
 import renderEngine.MasterRenderer;
+import renderEngine.MouseInput;
 import renderEngine.Window;
 import terrains.Terrain;
 import textures.TerrainTexture;
@@ -26,6 +27,8 @@ public class GameTest {
 	public static void main(String[] args) {
 
 		Window window = new Window("aa", 1280, 720, true);
+		MouseInput mouse = new MouseInput(window);
+		
 		Loader loader = new Loader();
 		
 		//***********************************************//

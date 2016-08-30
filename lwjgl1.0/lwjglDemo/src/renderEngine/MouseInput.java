@@ -30,12 +30,20 @@ public class MouseInput {
 
     private float dWheel = 0f;
     
-    public MouseInput() {
+    private Window window;
+    
+    public MouseInput(Window window) {
         previousPos = new Vector2d(-1, -1);
         currentPos = new Vector2d(0, 0);
         displVec = new Vector2f();
+        this.window = window;
+        init(window);
     }
-
+    
+    public Window getWindow(){
+    	return this.window;
+    }
+    
     public void init(Window window) {
         GLFW.glfwSetCursorPosCallback(window.getID(), cursorPosCallback = new GLFWCursorPosCallback() {
             @Override
