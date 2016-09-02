@@ -1,28 +1,19 @@
 package entities;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-
-import org.joml.Vector3f;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.vector.Vector3f;
 
 import models.TexturedModel;
-import renderEngine.Window;
+import renderEngine.DisplayManager;
 import terrains.Terrain;
 
 public class Player extends Entity {
-
-	private Window window;
 
 	private static final float RUN_SPEED = 20;
 	private static final float TURN_SPEED = 160;
 	private static final float GRAVITY = -50;
 	private static final float JUMPPOWER = 30;
 	
-	private static final float TERRAINHEIGHT = 0;
 	private boolean inTheAir = false;
 	
 	private float currentSpeed = 0;
@@ -35,16 +26,17 @@ public class Player extends Entity {
 
 	public void move(Terrain terrain) {
 		checkInputs();
-		super.increaseRotation(0, currentTurnSpeed*window.getDelta(), 0);
-		float distance = currentSpeed * window.getDelta();
-		float dx = (float) (distance*Math.sin(Math.toRadians(super.getRotY())));
-		float dz = (float) (distance*Math.cos(Math.toRadians(super.getRotY())));
+		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getDelta(), 0);
+		float distance = currentSpeed * DisplayManager.getDelta();
+		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
+		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
 		super.increasePosition(dx, 0, dz);
 		
-		upspeed += GRAVITY*window.getDelta();
-		super.increasePosition(0, upspeed*window.getDelta(), 0);
+		upspeed += GRAVITY*DisplayManager.getDelta();
+		super.increasePosition(0, upspeed*DisplayManager.getDelta(), 0);
 		
 		float terrainHeight = terrain.getTerrainHeight(this.getPosition().x, this.getPosition().z);
+//		float terrainHeight = 0;
 		if(super.getPosition().y <= terrainHeight){
 			this.upspeed = 0;
 			inTheAir = false;
@@ -60,15 +52,15 @@ public class Player extends Entity {
 	}
 
 	private void checkInputs() {
-		if (window.isKeyPressed(GLFW_KEY_W)) {
-			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-				this.currentSpeed = RUN_SPEED*2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+				this.currentSpeed = RUN_SPEED*2;
 			}else{
 				this.currentSpeed = RUN_SPEED;
 			}
-		} else if (window.isKeyPressed(GLFW_KEY_S)) {
-			if(window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)){
-				this.currentSpeed = -RUN_SPEED*2f;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
+				this.currentSpeed = -RUN_SPEED*2;
 			}else{
 				this.currentSpeed = -RUN_SPEED;
 			}
@@ -76,24 +68,16 @@ public class Player extends Entity {
 			this.currentSpeed = 0;
 		}
 		
-		if (window.isKeyPressed(GLFW_KEY_A)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			this.currentTurnSpeed = TURN_SPEED;
-		} else if (window.isKeyPressed(GLFW_KEY_D)) {
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			this.currentTurnSpeed = -TURN_SPEED;
 		} else {
 			this.currentTurnSpeed = 0;
 		}
-		if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			jump();
 		}
-	}
-
-	public Window getWindow() {
-		return window;
-	}
-
-	public void setWindow(Window window) {
-		this.window = window;
 	}
 
 }

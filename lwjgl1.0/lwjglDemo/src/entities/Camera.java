@@ -1,60 +1,88 @@
 package entities;
 
-import org.joml.Vector3f;
-
-import renderEngine.MouseInput;
-import renderEngine.Window;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
-
-	private Vector3f position ;
-	private Vector3f rotation = new Vector3f(20,0,0);//pitch = x,yall = y,row = z;
-
-	private static final float MOUSE_SENSITIVITY = 0.2f;
-
-	private float distance2Player = 50;
-	private float vAngle = 0;
-
+	
+	private float distanceFromPlayer = 50;
+	private float angleAroundPlayer = 0;
+	
+	private Vector3f position = new Vector3f(0, 5, 0);
+	private float pitch = 10;
+	private float yaw;
+	private float roll;
+	
 	private Player player;
-	private Window window;
-//	private MouseInput mouse;
 
-	public Camera(Player player, Window window) {
+	public Camera(Player player) {
 		this.player = player;
-		this.window = window;
-		player.setWindow(window);
-//		mouse = new MouseInput();
-//		mouse.init(window);
-		calculateCameraPosition();
 	}
 
 	public void move() {
-//		player.move();
-		calculateCameraPosition();
+		calculateZoom();
+		calculatePitch();
+		calculateAngleAroundPlayer();
+		
+		float hDistance = calculateHdistance();
+		float vDistance = calculateVdistance();
+		
+		calculateCameraPosition(vDistance, hDistance);
+		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
 	}
 	
-	public void calculateCameraPosition(){
-		this.rotation = new Vector3f(rotation.x,(180 - (player.getRotY())),rotation.z);
+	public void calculateCameraPosition(float v, float h){
+		float theta = angleAroundPlayer + player.getRotY();
 		
-		float yOff = (float) (distance2Player * Math.sin(Math.toRadians(this.rotation.x)));
-		float vDistance = (float) (distance2Player * Math.cos(Math.toRadians(this.rotation.x)));
-		float xOff = (float) (vDistance * Math.sin(Math.toRadians(player.getRotY()))) ;
-		float zOff = (float) (vDistance * Math.cos(Math.toRadians(player.getRotY()))) ;
+		float offsetX = (float) (h * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (h * Math.cos(Math.toRadians(theta)));
 		
-		this.position = new Vector3f(player.getPosition().x-xOff,player.getPosition().y+yOff,player.getPosition().z-zOff);
-		
+		this.position.x = player.getPosition().x - offsetX;
+		this.position.y = player.getPosition().y + v;
+		this.position.z = player.getPosition().z - offsetZ;
 	}
-
+	
+	private float calculateHdistance(){
+		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+	}
+	
+	private float calculateVdistance(){
+		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+	}
+	
+	private void calculateZoom(){
+		float zoomLevel = Mouse.getDWheel() * 0.1f;
+		distanceFromPlayer -= zoomLevel;
+	}
+	
+	private void calculatePitch(){
+		if(Mouse.isButtonDown(1)){
+			float pitchcg = Mouse.getDY() * 0.1f;
+			pitch -=pitchcg;
+		}
+	}
+	
+	private void calculateAngleAroundPlayer(){
+		if(Mouse.isButtonDown(0)){
+			float anglecg = Mouse.getDX() * 0.3f;
+			angleAroundPlayer -= anglecg;
+		}
+	}
+	
 	public Vector3f getPosition() {
 		return position;
 	}
-	
-	public Vector3f getRotation() {
-		return rotation;
+
+	public float getPitch() {
+		return pitch;
 	}
 
-	public void setRotation(Vector3f rotation) {
-		this.rotation = rotation;
+	public float getYaw() {
+		return yaw;
 	}
-	
+
+	public float getRoll() {
+		return roll;
+	}
+
 }

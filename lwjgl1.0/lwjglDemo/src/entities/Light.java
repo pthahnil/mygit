@@ -1,6 +1,6 @@
 package entities;
 
-import org.joml.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Light {
 
@@ -21,10 +21,6 @@ public class Light {
 
 	public Vector3f getAttenuation() {
 		return attenuation;
-	}
-
-	public void setAttenuation(Vector3f attenuation) {
-		this.attenuation = attenuation;
 	}
 
 	public Vector3f getPosition() {

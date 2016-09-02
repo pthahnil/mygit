@@ -1,8 +1,8 @@
 package entities;
 
-import org.joml.Vector3f;
-
 import models.TexturedModel;
+
+import org.lwjgl.util.vector.Vector3f;
 
 public class Entity {
 
@@ -12,7 +12,7 @@ public class Entity {
 	private float scale;
 	
 	private int texIndex = 0;
-	
+
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
 		this.model = model;
@@ -33,7 +33,21 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 	}
-
+	
+	public float getTexXoffSet(){
+		int tt = model.getTexture().getRows();
+		int col =  texIndex%tt;
+		float xoffset = col/(float)model.getTexture().getRows();
+		return xoffset;
+	}
+	
+	public float getTexYoffSet(){
+		int tt = model.getTexture().getRows();
+		int row =  texIndex/tt;
+		float yoffset = row/(float)model.getTexture().getRows();
+		return yoffset;
+	}
+	
 	public void increasePosition(float dx, float dy, float dz) {
 		this.position.x += dx;
 		this.position.y += dy;
@@ -49,22 +63,7 @@ public class Entity {
 	public TexturedModel getModel() {
 		return model;
 	}
-	
 
-	public float getTexXoffSet(){
-		int tt = model.getTexture().getRows();
-		int col =  texIndex%tt;
-		float xoffset = col/(float)model.getTexture().getRows();
-		return xoffset;
-	}
-	
-	public float getTexYoffSet(){
-		int tt = model.getTexture().getRows();
-		int row =  texIndex/tt;
-		float yoffset = row/(float)model.getTexture().getRows();
-		return yoffset;
-	}
-	
 	public void setModel(TexturedModel model) {
 		this.model = model;
 	}

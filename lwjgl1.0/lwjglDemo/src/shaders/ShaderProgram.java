@@ -1,161 +1,118 @@
 package shaders;
 
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-
-import toolbox.Utils;
-
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public abstract class ShaderProgram {
-
-	private int programId;
-	private int vertexShaderId;
-	private int fragmentShaderId;
 	
-	FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16); 
-	private final Map<String, Integer> uniforms;
+	private int programID;
+	private int vertexShaderID;
+	private int fragmentShaderID;
 	
-	public ShaderProgram(String vtFile,String fgFile) {
-		uniforms = new HashMap<>();
-		try {
-			vertexShaderId = loadShader(vtFile, GL20.GL_VERTEX_SHADER);
-			fragmentShaderId = loadShader(fgFile, GL20.GL_FRAGMENT_SHADER);
-		} catch (Exception e) {
+	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
+	
+	public ShaderProgram(String vertexFile,String fragmentFile){
+		vertexShaderID = loadShader(vertexFile,GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(fragmentFile,GL20.GL_FRAGMENT_SHADER);
+		programID = GL20.glCreateProgram();
+		GL20.glAttachShader(programID, vertexShaderID);
+		GL20.glAttachShader(programID, fragmentShaderID);
+		bindAttributes();
+		GL20.glLinkProgram(programID);
+		GL20.glValidateProgram(programID);
+		getAllUniformLocations();
+	}
+	
+	protected abstract void getAllUniformLocations();
+	
+	protected int getUniformLocation(String uniformName){
+		return GL20.glGetUniformLocation(programID,uniformName);
+	}
+	
+	public void start(){
+		GL20.glUseProgram(programID);
+	}
+	
+	public void stop(){
+		GL20.glUseProgram(0);
+	}
+	
+	public void cleanUp(){
+		stop();
+		GL20.glDetachShader(programID, vertexShaderID);
+		GL20.glDetachShader(programID, fragmentShaderID);
+		GL20.glDeleteShader(vertexShaderID);
+		GL20.glDeleteShader(fragmentShaderID);
+		GL20.glDeleteProgram(programID);
+	}
+	
+	protected abstract void bindAttributes();
+	
+	protected void bindAttribute(int attribute, String variableName){
+		GL20.glBindAttribLocation(programID, attribute, variableName);
+	}
+	
+	protected void loadFloat(int location, float value){
+		GL20.glUniform1f(location, value);
+	}
+	
+	protected void loadInt(int location, int value){
+		GL20.glUniform1i(location, value);
+	}
+	
+	protected void loadVector(int location, Vector3f vector){
+		GL20.glUniform3f(location,vector.x,vector.y,vector.z);
+	}
+	
+	protected void loadVector2f(int location, Vector2f vector){
+		GL20.glUniform2f(location,vector.x,vector.y);
+	}
+	
+	protected void loadBoolean(int location, boolean value){
+		float toLoad = 0;
+		if(value){
+			toLoad = 1;
+		}
+		GL20.glUniform1f(location, toLoad);
+	}
+	
+	protected void loadMatrix(int location, Matrix4f matrix){
+		matrix.store(matrixBuffer);
+		matrixBuffer.flip();
+		GL20.glUniformMatrix4(location, false, matrixBuffer);
+	}
+	
+	private static int loadShader(String file, int type){
+		StringBuilder shaderSource = new StringBuilder();
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line;
+			while((line = reader.readLine())!=null){
+				shaderSource.append(line).append("//\n");
+			}
+			reader.close();
+		}catch(IOException e){
 			e.printStackTrace();
+			System.exit(-1);
 		}
-		
-		programId = GL20.glCreateProgram();
-		GL20.glAttachShader(programId, vertexShaderId);
-		GL20.glAttachShader(programId, fragmentShaderId);
-		
-		bindAttrs();
-		
-		GL20.glLinkProgram(programId);
-		GL20.glValidateProgram(programId);
-		
-		getAllUniforms();
+		int shaderID = GL20.glCreateShader(type);
+		GL20.glShaderSource(shaderID, shaderSource);
+		GL20.glCompileShader(shaderID);
+		if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS )== GL11.GL_FALSE){
+			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
+			System.err.println("Could not compile shader!");
+			System.exit(-1);
+		}
+		return shaderID;
 	}
-	
-	protected abstract void bindAttrs();
-	
-	protected void bindAttr(int attribute,String variableName){
-		GL20.glBindAttribLocation(programId, attribute, variableName);
-	}
-	//--------------------------------------------------------------------------
-	protected abstract void getAllUniforms();
-	
-	protected void createUniform(String uniformName) throws Exception {
-        int uniformLocation = glGetUniformLocation(programId, uniformName);
-        if (uniformLocation < 0) {
-            throw new Exception ("Could not find uniform:" + uniformName);
-        }
-        uniforms.put(uniformName, uniformLocation);
-    }
-    
-    public void setUniform(String uniformName, Matrix4f value) {
-        // Dump the matrix into a float buffer
-        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-        value.get(fb);
-        glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
-    }
-    
-	//--------------------------------------------------------------------------
-	 public void start() {
-        glUseProgram(programId);
-	 }
 
-    public void stop() {
-        glUseProgram(0);
-    }
-
-    public void cleanup() {
-        stop();
-        if (programId != 0) {
-            if (vertexShaderId != 0) {
-                GL20.glDetachShader(programId, vertexShaderId);
-                GL20.glDeleteShader(vertexShaderId);
-            }
-            if (fragmentShaderId != 0) {
-            	GL20.glDetachShader(programId, fragmentShaderId);
-            	GL20.glDeleteShader(fragmentShaderId);
-            }
-            GL20.glDeleteProgram(programId);
-        }
-    }
-	    
-	private static int loadShader(String path, int shaderType) throws Exception{
-		
-		int shaderId = GL20.glCreateShader(shaderType);
-		if(shaderId<0){
-			throw new Exception("unable to create shader");
-		}
-		
-		String sourceCode = Utils.loadResource(path);
-		
-		GL20.glShaderSource(shaderId, sourceCode);
-		GL20.glCompileShader(shaderId);
-		
-		if(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS)==GL11.GL_FALSE){
-			throw new Exception("compile shader error ");
-		}
-		
-		return shaderId;
-	}
-	//---------------------上传数据----------------------------
-    protected void loadFloat(String loname,float f){
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniform1f(location, f);
-    }
-    
-    protected void loadInt(String loname,int i){
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniform1i(location, i);
-    }
-    
-    protected void loadVector(String loname, Vector3f vect){
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniform3f(location, vect.x, vect.y, vect.z);
-    }
-    
-    protected void loadVector2f(String loname, Vector2f offset){
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniform2f(location, offset.x, offset.y);
-    }
-    
-    protected void loadBoolean(int location,boolean b){
-    	float f = 0;
-    	if(b){
-    		f = 1f;
-    	}
-    	GL20.glUniform1f(location, f);
-    }
-    
-    protected void loadBoolean(String loname,boolean b){
-    	float f = 0;
-    	if(b){
-    		f = 1f;
-    	}
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniform1f(location, f);
-    }
-    
-    protected void loadMatrix(String loname,Matrix4f value){
-    	value.get(matrixBuffer);
-    	matrixBuffer.flip();
-    	Integer location = uniforms.get(loname);
-    	GL20.glUniformMatrix4fv(location, false, matrixBuffer);
-    }
-    
 }

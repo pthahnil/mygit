@@ -1,29 +1,28 @@
 package textures;
 
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 public class TextureData {
-
+	
 	private int width;
 	private int height;
 	private ByteBuffer buffer;
-
-	public TextureData(int width, int height, ByteBuffer buffer) {
+	
+	public TextureData(ByteBuffer buffer, int width, int height){
+		this.buffer = buffer;
 		this.width = width;
 		this.height = height;
-		this.buffer = buffer;
 	}
-
-	public int getWidth() {
+	
+	public int getWidth(){
 		return width;
 	}
-
-	public int getHeight() {
+	
+	public int getHeight(){
 		return height;
 	}
-
-	public ByteBuffer getBuffer() {
+	
+	public ByteBuffer getBuffer(){
 		return buffer;
 	}
 

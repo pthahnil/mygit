@@ -1,15 +1,15 @@
 package skybox;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import models.RawModel;
-import toolbox.Loader;
+import renderEngine.Loader;
 
 public class SkyboxRenderer {
 
@@ -62,13 +62,13 @@ public class SkyboxRenderer {
 	};
 	
 	private static String[] SKYBOXFILES = {
-			"/res/right.png","/res/left.png",
-			"/res/top.png","/res/bottom.png",
-			"/res/back.png","/res/front.png"};
-	private static String[] NIGHTSKYBOXFILES = {
-			"/res/nightRight.png","/res/nightLeft.png",
-			"/res/nightTop.png","/res/nightBottom.png",
-			"/res/nightBack.png","/res/nightFront.png"};
+			"right","left",
+			"top","bottom",
+			"back","front"};
+//	private static String[] NIGHTSKYBOXFILES = {
+//			"nightRight","nightLeft",
+//			"nightTop","nightBottom",
+//			"nightBack","nightFront"};
 	
 	
 	private RawModel cube;
@@ -77,28 +77,35 @@ public class SkyboxRenderer {
 	private SkyboxShader shader;
 	
 	public SkyboxRenderer(Loader loader,Matrix4f projectionMatrix) {
-		cube = loader.storeDataToVAO(VERTICES, 3);
+		cube = loader.loadToVAO(VERTICES, 3);
 		
 		texture = loader.loadCubeMap(SKYBOXFILES);
-		nightTexture = loader.loadCubeMap(NIGHTSKYBOXFILES);
+//		nightTexture = loader.loadCubeMap(NIGHTSKYBOXFILES);
 		
 		shader = new SkyboxShader();
 		shader.start();
-		shader.connectTextureUnits();
+//		shader.connectTextureUnits();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
 	
-	public void render(Camera camera,Vector3f fogColour){
+	public void render(Camera camera, Vector3f fogColour){
 		shader.start();
 		shader.loadViewMatrix(camera);
 		shader.loadFogColour(fogColour);
 		GL30.glBindVertexArray(cube.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		bindTextures();
+//		bindTextures();
+		
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, cube.getVertexCount());
+		
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
+		
+		shader.stop();
 	}
 	
 	private void bindTextures(){
@@ -129,6 +136,6 @@ public class SkyboxRenderer {
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
 		GL13.glActiveTexture(GL13.GL_TEXTURE1);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
-		shader.loadBlendFactor(blendFactor);
+//		shader.loadBlendFactor(blendFactor);
 	}
 }
