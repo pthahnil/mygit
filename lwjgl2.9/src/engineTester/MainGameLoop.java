@@ -24,6 +24,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 public class MainGameLoop {
 
@@ -65,9 +66,6 @@ public class MainGameLoop {
 		guis.add(gui);
 		
 		GuiRenderer grender = new GuiRenderer(loader);
-		
-		/**************************************************************************************/
-		
 		
 		/**************************************************************************************/
 		
@@ -118,10 +116,14 @@ public class MainGameLoop {
 		/**************************************************************************************/
 		Camera camera = new Camera(player);
 		MasterRenderer renderer = new MasterRenderer(loader);
-		
+		/**************************************************************************************/
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMarix(), terrain);
+		/**************************************************************************************/
 		while(!Display.isCloseRequested()){
 			camera.move();
 			player.move(terrain);
+			
+			picker.update();
 			
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
