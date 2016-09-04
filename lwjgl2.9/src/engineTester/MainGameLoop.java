@@ -47,7 +47,7 @@ public class MainGameLoop {
 		Loader loader = new Loader();
 		TextMaster.init(loader);
 		
-		FontType font = new FontType(loader.loadTexture("harrington"), new File("res/harrington.fnt"));
+		FontType font = new FontType(loader.loadTexture("candara"), new File("res/candara.fnt"));
 		GUIText text = new GUIText("This is some text!", 3f, font, new Vector2f(0f, 0f), 1f, true);
 		text.setColour(1, 0, 0);
 
