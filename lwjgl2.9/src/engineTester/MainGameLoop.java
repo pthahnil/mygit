@@ -24,7 +24,6 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.MousePicker;
 
 public class MainGameLoop {
 
@@ -69,6 +68,9 @@ public class MainGameLoop {
 		
 		/**************************************************************************************/
 		
+		
+		/**************************************************************************************/
+		
 		List<Entity> entities = new ArrayList<Entity>();
 		Random random = new Random();
 		for(int i=0;i<200;i++){
@@ -94,7 +96,7 @@ public class MainGameLoop {
 		}
 		/**************************************************************************************/
 		List<Light>lights = new ArrayList<>();
-		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(0.4f,0.4f,0.4f)));
+		lights.add(new Light(new Vector3f(0,10000,-7000),new Vector3f(0.1f,0.1f,0.1f)));
 		lights.add(new Light(new Vector3f(185,10,-293),new Vector3f(2,0,0),new Vector3f(1.0f,0.01f,0.002f)));
 		lights.add(new Light(new Vector3f(370,17,-300),new Vector3f(0,2,2),new Vector3f(1.0f,0.01f,0.002f)));
 		lights.add(new Light(new Vector3f(293,7,-305),new Vector3f(2,2,0),new Vector3f(1.0f,0.01f,0.002f)));
@@ -116,14 +118,10 @@ public class MainGameLoop {
 		/**************************************************************************************/
 		Camera camera = new Camera(player);
 		MasterRenderer renderer = new MasterRenderer(loader);
-		/**************************************************************************************/
-		MousePicker picker = new MousePicker(camera, renderer.getProjectionMarix(), terrain);
-		/**************************************************************************************/
+		
 		while(!Display.isCloseRequested()){
 			camera.move();
 			player.move(terrain);
-			
-			picker.update();
 			
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);

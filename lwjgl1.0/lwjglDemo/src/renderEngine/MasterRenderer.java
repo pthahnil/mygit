@@ -97,6 +97,10 @@ public class MasterRenderer {
 		terrainShader.cleanUp();
 	}
 	
+	public Matrix4f  getProjectionMarix(){
+		return this.projectionMatrix;
+	}
+	
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
