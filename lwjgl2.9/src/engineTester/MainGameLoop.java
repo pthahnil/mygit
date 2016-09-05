@@ -193,7 +193,7 @@ public class MainGameLoop {
 			picker.update();
 			
 			particleSystem.generateParticles(player.getPosition());
-			ParticleMaster.update();
+			ParticleMaster.update(camera);
 			
 			entity.increaseRotation(0, 1, 0);
 			entity2.increaseRotation(0, 1, 0);

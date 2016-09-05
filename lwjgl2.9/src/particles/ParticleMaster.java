@@ -21,7 +21,7 @@ public class ParticleMaster {
 		renderer = new ParticleRenderer(loader, projectionMatrix);
 	}
 	
-	public static void update(){
+	public static void update(Camera camera){
 		
 		Iterator<Entry<ParticleTexture, List<Particle>>> mapIt = partilcles.entrySet().iterator();
 		while(mapIt.hasNext()){
@@ -30,7 +30,7 @@ public class ParticleMaster {
 			Iterator<Particle> it = list.iterator();
 			while(it.hasNext()){
 				Particle pt = it.next();
-				boolean stillAlive = pt.update();
+				boolean stillAlive = pt.update(camera);
 				if(!stillAlive){
 					it.remove();
 					if(list.isEmpty()){
@@ -38,6 +38,7 @@ public class ParticleMaster {
 					}
 				}
 			}
+			InsertionSort.sortHighToLow(list);
 		}
 		
 	}

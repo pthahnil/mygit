@@ -37,6 +37,11 @@ public class ParticleRenderer {
 		prepare();
 
 		for (ParticleTexture texture : particles.keySet()) {
+			if(texture.isAdditive()){
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			}else{
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			}
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
 			for (Particle particle : particles.get(texture)) {
@@ -80,7 +85,6 @@ public class ParticleRenderer {
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		GL11.glDepthMask(false);
 	}
 
