@@ -11,7 +11,8 @@ public class ParticleShader extends ShaderProgram {
 
 	private int location_modelViewMatrix;
 	private int location_projectionMatrix;
-
+//	private int location_particleTexture;
+	
 	public ParticleShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -20,6 +21,7 @@ public class ParticleShader extends ShaderProgram {
 	protected void getAllUniformLocations() {
 		location_modelViewMatrix = super.getUniformLocation("modelViewMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+//		location_particleTexture = super.getUniformLocation("particleTexture");
 	}
 
 	@Override

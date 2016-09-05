@@ -29,6 +29,7 @@ import objConverter.OBJFileLoader;
 import particles.Particle;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
+import particles.ParticleTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -57,7 +58,7 @@ public class MainGameLoop {
 		GUIText text = new GUIText("This is some text!", 3f, font, new Vector2f(0f, 0f), 1f, true);
 		text.setColour(1, 0, 0);
 
-		// *********TERRAIN TEXTURE STUFF**********
+		/************************************************************/
 		
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
@@ -68,7 +69,7 @@ public class MainGameLoop {
 				gTexture, bTexture);
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
-		// *****************************************
+		/************************************************************/
 
 		TexturedModel rocks = new TexturedModel(OBJFileLoader.loadOBJ("rocks", loader),
 				new ModelTexture(loader.loadTexture("rocks")));
@@ -96,7 +97,7 @@ public class MainGameLoop {
 		List<Entity> entities = new ArrayList<Entity>();
 		List<Entity> normalMapEntities = new ArrayList<Entity>();
 		
-		//******************NORMAL MAP MODELS************************
+		/************************************************************/
 		
 		TexturedModel barrelModel = new TexturedModel(NormalMappedObjLoader.loadOBJ("barrel", loader),
 				new ModelTexture(loader.loadTexture("barrel")));
@@ -117,7 +118,7 @@ public class MainGameLoop {
 		boulderModel.getTexture().setReflectivity(0.5f);
 		
 		
-		//************ENTITIES*******************
+		/************************************************************/
 		
 		Entity entity = new Entity(barrelModel, new Vector3f(75, 10, -75), 0, 0, 0, 1f);
 		Entity entity2 = new Entity(boulderModel, new Vector3f(85, 10, -75), 0, 0, 0, 1f);
@@ -154,8 +155,8 @@ public class MainGameLoop {
 		}
 		entities.add(new Entity(rocks, new Vector3f(75, 4.6f, -75), 0, 0, 0, 75));
 		
-		//*******************OTHER SETUP***************
 
+		/************************************************************/
 		List<Light> lights = new ArrayList<Light>();
 		Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
 		lights.add(sun);
@@ -172,7 +173,7 @@ public class MainGameLoop {
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 	
-		//**********Water Renderer Set-up************************
+		/************************************************************/
 		
 		WaterFrameBuffers buffers = new WaterFrameBuffers();
 		WaterShader waterShader = new WaterShader();
@@ -180,11 +181,12 @@ public class MainGameLoop {
 		List<WaterTile> waters = new ArrayList<WaterTile>();
 		WaterTile water = new WaterTile(75, -75, 0);
 		waters.add(water);
+		/************************************************************/
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
 		
-		
-		ParticleSystem particleSystem = new ParticleSystem(50, 30, 0.4f, 4);
-		//****************Game Loop Below*********************
+		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 50, 30, 0.4f, 4);
 
+		/************************************************************/
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
