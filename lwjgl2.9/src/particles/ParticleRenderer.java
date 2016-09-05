@@ -16,42 +16,43 @@ import renderEngine.Loader;
 import toolbox.Maths;
 
 public class ParticleRenderer {
-	
-	private static final float[] VERTICES = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
-	
+
+	private static final float[] VERTICES = { -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f };
+
 	private RawModel quad;
 	private ParticleShader shader;
-	
-	protected ParticleRenderer(Loader loader, Matrix4f projectionMatrix){
-		
+
+	protected ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
+
 		quad = loader.loadToVAO(VERTICES, 2);
 		shader = new ParticleShader();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
 	}
-	
-	protected void render(Map<ParticleTexture,List<Particle>> particles, Camera camera){
-		
+
+	protected void render(Map<ParticleTexture, List<Particle>> particles, Camera camera) {
+
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		prepare();
-		
+
 		for (ParticleTexture texture : particles.keySet()) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
-			for(Particle particle : particles.get(texture)){
-				updateModelViewMaxrit(particle.getPosition(), particle.getRolation(), 
-						particle.getScale(), viewMatrix);
+			for (Particle particle : particles.get(texture)) {
+				updateModelViewMaxrit(particle.getPosition(), particle.getRolation(), particle.getScale(), viewMatrix);
+				shader.loadTextureInfo(particle.getTexOffset1(), particle.getTexOffset2(),
+						texture.getNumberOfRows(), particle.getBlend());
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 			}
-			
+
 		}
-		
+
 		finishRendering();
 	}
-	
-	private void updateModelViewMaxrit(Vector3f position, float rocation, float scale, Matrix4f viewMatrix){
-		
+
+	private void updateModelViewMaxrit(Vector3f position, float rocation, float scale, Matrix4f viewMatrix) {
+
 		Matrix4f modelMatrix = new Matrix4f();
 		Matrix4f.translate(position, modelMatrix, modelMatrix);
 		modelMatrix.m00 = viewMatrix.m00;
@@ -63,27 +64,27 @@ public class ParticleRenderer {
 		modelMatrix.m20 = viewMatrix.m02;
 		modelMatrix.m21 = viewMatrix.m12;
 		modelMatrix.m22 = viewMatrix.m22;
-		Matrix4f.rotate((float)Math.toRadians(scale), new Vector3f(0,0,1), modelMatrix, modelMatrix);
-		Matrix4f.scale(new Vector3f(scale,scale,scale), modelMatrix, modelMatrix);
-		
+		Matrix4f.rotate((float) Math.toRadians(scale), new Vector3f(0, 0, 1), modelMatrix, modelMatrix);
+		Matrix4f.scale(new Vector3f(scale, scale, scale), modelMatrix, modelMatrix);
+
 		Matrix4f modelViewMatrix = Matrix4f.mul(viewMatrix, modelMatrix, null);
 		shader.loadModelViewMatrix(modelViewMatrix);
 	}
 
-	protected void cleanUp(){
+	protected void cleanUp() {
 		shader.cleanUp();
 	}
-	
-	private void prepare(){
+
+	private void prepare() {
 		shader.start();
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		GL11.glDepthMask(false);
 	}
-	
-	private void finishRendering(){
+
+	private void finishRendering() {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL20.glDisableVertexAttribArray(0);

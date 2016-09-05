@@ -182,7 +182,7 @@ public class MainGameLoop {
 		WaterTile water = new WaterTile(75, -75, 0);
 		waters.add(water);
 		/************************************************************/
-		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleStar"), 1);
+		ParticleTexture particleTexture = new ParticleTexture(loader.loadTexture("particleAtlas"), 4);
 		
 		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 50, 30, 0.4f, 4);
 
