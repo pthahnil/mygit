@@ -28,6 +28,8 @@ import objConverter.OBJFileLoader;
 import particles.ParticleMaster;
 import particles.ParticleSystem;
 import particles.ParticleTexture;
+import postProcessing.Fbo;
+import postProcessing.PostProcessing;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -193,6 +195,9 @@ public class MainGameLoop {
 		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 50, 30, 0.4f, 4);
 
 		/************************************************************/
+		Fbo fbo = new Fbo(DisplayManager.getWidth(), DisplayManager.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
+		PostProcessing.init(loader);
+		/************************************************************/
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
@@ -224,10 +229,13 @@ public class MainGameLoop {
 			//render to screen
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			buffers.unbindCurrentFrameBuffer();	
+			
+			fbo.bindFrameBuffer();
 			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));	
 			waterRenderer.render(waters, camera, sun);
-			
 			ParticleMaster.render(camera);
+			fbo.unbindFrameBuffer();
+			PostProcessing.doPostProcessing(fbo.getColourTexture());
 			
 			guiRenderer.render(guiTextures);
 			TextMaster.render();
@@ -236,7 +244,8 @@ public class MainGameLoop {
 		}
 
 		//*********Clean Up Below**************
-		
+		PostProcessing.cleanUp();
+		fbo.cleanUp();
 		ParticleMaster.cleanUp();
 		TextMaster.cleanUp();
 		buffers.cleanUp();
