@@ -1,22 +1,22 @@
 package textures;
 
 public class TerrainTexturePack {
-
-	private TerrainTexture bgTexture;
+	
+	private TerrainTexture backgroundTexture;
 	private TerrainTexture rTexture;
 	private TerrainTexture gTexture;
 	private TerrainTexture bTexture;
-
-	public TerrainTexturePack(TerrainTexture bgTexture, TerrainTexture rTexture, TerrainTexture gTexture,
-			TerrainTexture bTexture) {
-		this.bgTexture = bgTexture;
+	
+	public TerrainTexturePack(TerrainTexture backgroundTexture, TerrainTexture rTexture,
+			TerrainTexture gTexture, TerrainTexture bTexture) {
+		this.backgroundTexture = backgroundTexture;
 		this.rTexture = rTexture;
 		this.gTexture = gTexture;
 		this.bTexture = bTexture;
 	}
 
-	public TerrainTexture getBgTexture() {
-		return bgTexture;
+	public TerrainTexture getBackgroundTexture() {
+		return backgroundTexture;
 	}
 
 	public TerrainTexture getrTexture() {
@@ -30,5 +30,6 @@ public class TerrainTexturePack {
 	public TerrainTexture getbTexture() {
 		return bTexture;
 	}
+
 
 }
