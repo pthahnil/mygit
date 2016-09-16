@@ -156,7 +156,7 @@ public class MainGameLoop {
 
 		/************************************************************/
 		List<Light> lights = new ArrayList<Light>();
-		Light sun = new Light(new Vector3f(10000, 10000, -10000), new Vector3f(1.3f, 1.3f, 1.3f));
+		Light sun = new Light(new Vector3f(1000000, 150000, -1000000), new Vector3f(1.3f, 1.3f, 1.3f));
 		lights.add(sun);
 
 
