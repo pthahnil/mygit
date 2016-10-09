@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+	"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+    <constant name="struts.convention.classes.reload" value="true"/>
+    <package name="default" namespace="/" extends="json-default">
+		
+		<interceptors>
+			<interceptor name="auth" class="com.autho.interceptor.AccessInterceptor"></interceptor>
+			<interceptor-stack name="mystack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!-- <interceptor-ref name="auth"></interceptor-ref> -->
+			</interceptor-stack>
+		</interceptors>
+		
+		<global-results>
+			<result name="no_auth">/no_auth.jsp</result>
+		</global-results>
+		
+		<action name="*" class="{1}Action">
+			<interceptor-ref name="mystack"/>  
+        	<!-- <result name="add">/main/{1}/{1}add.jsp</result>
+        	<result name="all">/main/{1}/{1}all.jsp</result>
+			<result name="success">/sussess.jsp</result> -->
+        </action>
+        
+    </package>
+    
+</struts> 
+
+    

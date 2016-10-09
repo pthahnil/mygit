@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jaxws="http://cxf.apache.org/jaxws" 
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-4.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://cxf.apache.org/jaxws     
+    http://cxf.apache.org/schemas/jaxws.xsd">  
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.autho.main" />
+	
+	<!-- webservice 接口 -->
+	<bean id="DeptWServiceImpl"
+		class="com.webservice.DeptWServiceImpl" />
+
+	<jaxws:server serviceClass="com.webservice.DeptWService"
+		address="/deptWService">
+		<jaxws:serviceBean>
+			<ref bean="DeptWServiceImpl" />
+		</jaxws:serviceBean>
+	</jaxws:server>
+	
+	
+	<!-- jdbc配置 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 配置datasource -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${database.driver}" />
+		<property name="jdbcUrl" value="${database.url}" />
+		<property name="user" value="${database.user}" />
+		<property name="password" value="${database.password}" />
+	    <property name="initialPoolSize" value="${database.initialSize}" />
+	</bean>
+	
+	<!-- 配置sessionfactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect </prop> 
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop> 
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+				 <!-- 是否开启二级缓存 -->
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <!-- 是否开启查询缓存 -->
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <!-- 数据库批量查询最大数 -->
+                <prop key="hibernate.jdbc.fetch_size">50</prop>
+                <!-- 数据库批量更新、添加、删除操作最大数 -->
+                <prop key="hibernate.jdbc.batch_size">50</prop>
+                <!-- 是否自动提交事务 -->
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <!-- 指定hibernate在何时释放JDBC连接 -->
+                <prop key="hibernate.connection.release_mode">auto</prop>
+                <!-- 创建session方式 hibernate4.x 的方式 -->	
+				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+			</props>
+		</property>
+		<property name="packagesToScan" value="com.autho" />
+	</bean>
+	
+	<!-- 配置hibernateTemaplte -->
+	<!-- <bean id="hibernateTemplate" class="org.springframework.orm.hibernate4.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean> -->
+	
+	<!-- 配置jdbcTemaplte -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 配置transactionManager -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+    <!--配置事务的传播特性 -->  
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">  
+	    <tx:attributes>  
+	        <tx:method name="*add*" propagation="REQUIRED" />  
+	        <tx:method name="*delete*" propagation="REQUIRED" />  
+	        <tx:method name="*modify*" propagation="REQUIRED" />  
+	        <tx:method name="*update*" propagation="REQUIRED" />  
+	        <tx:method name="*" read-only="true" />  
+	    </tx:attributes>  
+	</tx:advice> 
+    
+    <!--那些类的哪些方法参与事务 -->  
+	<aop:config proxy-target-class="true">  
+	    <aop:pointcut id="allManagerMethod"  
+	        expression="execution(* com.autho.main.*.service..*.*(..))" />  
+	    <aop:advisor pointcut-ref="allManagerMethod" advice-ref="txAdvice" />  
+	</aop:config>  
+    
+</beans>
