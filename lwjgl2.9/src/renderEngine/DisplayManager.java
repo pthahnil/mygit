@@ -25,7 +25,7 @@ public class DisplayManager {
 		
 		try {
 			Display.setDisplayMode(new DisplayMode(WIDTH,HEIGHT));
-			Display.create(new PixelFormat().withSamples(8), attribs);
+			Display.create(new PixelFormat(), attribs);
 			Display.setTitle("Our First Display!");
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
@@ -52,16 +52,16 @@ public class DisplayManager {
 		Display.destroy();
 	}
 	
+	private static long getCurrentTime(){
+		return Sys.getTime()*1000/Sys.getTimerResolution();
+	}
+
 	public static int getWidth() {
 		return WIDTH;
 	}
 
 	public static int getHeight() {
 		return HEIGHT;
-	}
-
-	private static long getCurrentTime(){
-		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
 	
 	

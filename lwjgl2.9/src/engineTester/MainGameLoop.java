@@ -49,18 +49,7 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		TextMaster.init(loader);
-		
-		List<Entity> entities = new ArrayList<Entity>();
-		
-		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
-		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
-				loader.loadTexture("playerTexture")));
-		
-		Player player = new Player(stanfordBunny, new Vector3f(75, 5, -75), 0, 100, 0, 0.6f);
-		entities.add(player);
-		Camera camera = new Camera(player);
-		
-		MasterRenderer renderer = new MasterRenderer(loader, camera);
+		MasterRenderer renderer = new MasterRenderer(loader);
 		ParticleMaster.init(loader, renderer.getProjectionMatrix());
 		
 		FontType font = new FontType(loader.loadTexture("candara"), new File("res/candara.fnt"));
@@ -103,7 +92,7 @@ public class MainGameLoop {
 				new ModelTexture(loader.loadTexture("lamp")));
 		lamp.getTexture().setUseFakeLighting(true);
 
-		
+		List<Entity> entities = new ArrayList<Entity>();
 		List<Entity> normalMapEntities = new ArrayList<Entity>();
 		
 		/************************************************************/
@@ -171,14 +160,17 @@ public class MainGameLoop {
 		lights.add(sun);
 
 
-		
+		RawModel bunnyModel = OBJLoader.loadObjModel("person", loader);
+		TexturedModel stanfordBunny = new TexturedModel(bunnyModel, new ModelTexture(
+				loader.loadTexture("playerTexture")));
+
+		Player player = new Player(stanfordBunny, new Vector3f(75, 5, -75), 0, 100, 0, 0.6f);
+		entities.add(player);
+		Camera camera = new Camera(player);
 		List<GuiTexture> guiTextures = new ArrayList<GuiTexture>();
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
-		
-		GuiTexture shadowMap = new GuiTexture(renderer.getShadowTexture(), new Vector2f(0.5f,0.5f), new Vector2f(0.5f,0.5f));
-//		guiTextures.add(shadowMap);
-		
+	
 		/************************************************************/
 		
 		WaterFrameBuffers buffers = new WaterFrameBuffers();
@@ -193,9 +185,12 @@ public class MainGameLoop {
 		ParticleSystem particleSystem = new ParticleSystem(particleTexture, 50, 30, 0.4f, 4);
 
 		/************************************************************/
+<<<<<<< HEAD
 //		Fbo fbo = new Fbo(DisplayManager.getWidth(), DisplayManager.getHeight(), Fbo.DEPTH_RENDER_BUFFER);
 //		PostProcessing.init(loader);
 		/************************************************************/
+=======
+>>>>>>> 1.1.0
 		while (!Display.isCloseRequested()) {
 			player.move(terrain);
 			camera.move();
@@ -203,8 +198,6 @@ public class MainGameLoop {
 			
 			particleSystem.generateParticles(player.getPosition());
 			ParticleMaster.update(camera);
-			
-			renderer.renderShasowMap(entities, sun);
 			
 			entity.increaseRotation(0, 1, 0);
 			entity2.increaseRotation(0, 1, 0);
@@ -227,13 +220,20 @@ public class MainGameLoop {
 			//render to screen
 			GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 			buffers.unbindCurrentFrameBuffer();	
+<<<<<<< HEAD
 			
 //			fbo.bindFrameBuffer();
+=======
+>>>>>>> 1.1.0
 			renderer.renderScene(entities, normalMapEntities, terrains, lights, camera, new Vector4f(0, -1, 0, 100000));	
 			waterRenderer.render(waters, camera, sun);
+			
 			ParticleMaster.render(camera);
+<<<<<<< HEAD
 //			fbo.unbindFrameBuffer();
 //			PostProcessing.doPostProcessing(fbo.getColourTexture());
+=======
+>>>>>>> 1.1.0
 			
 			guiRenderer.render(guiTextures);
 			TextMaster.render();
@@ -242,8 +242,12 @@ public class MainGameLoop {
 		}
 
 		//*********Clean Up Below**************
+<<<<<<< HEAD
 //		PostProcessing.cleanUp();
 //		fbo.cleanUp();
+=======
+		
+>>>>>>> 1.1.0
 		ParticleMaster.cleanUp();
 		TextMaster.cleanUp();
 		buffers.cleanUp();
