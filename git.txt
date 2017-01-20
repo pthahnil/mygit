@@ -1,0 +1,24 @@
+
+======================create a new repository=======================
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/pthahnil/webcraft.git
+git push -u origin master
+
+------------deinit----------------
+rm -rf .git 
+
+------------create a new branch------------
+git branch ***
+git push origin ***
+
+
+------------delete a local branch-------------
+git br -d ***
+
+
+------------delete a remote branch------------
+git branch -r -d origin/***
+git push origin :***
+
